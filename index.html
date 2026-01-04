@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tienda Multicategoría</title>
+    <style>
+        :root {
+            --primario: #2563eb;
+            --oscuro: #0f172a;
+            --blanco: #ffffff;
+            --gris: #f1f5f9;
+        }
+
+        body { font-family: 'Segoe UI', sans-serif; margin: 0; background: var(--gris); }
+
+        /* Navegación por pestañas */
+        nav {
+            background: var(--oscuro);
+            padding: 10px;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        nav button {
+            background: transparent;
+            color: white;
+            border: 1px solid rgba(255,255,255,0.3);
+            padding: 10px 15px;
+            cursor: pointer;
+            border-radius: 5px;
+            transition: 0.3s;
+        }
+
+        nav button:hover, nav button.active {
+            background: var(--primario);
+            border-color: var(--primario);
+        }
+
+        .contenedor { max-width: 1100px; margin: 20px auto; padding: 0 20px; }
+
+        /* Control de secciones */
+        .seccion { display: none; }
+        .seccion.activa { display: block; }
+
+        /* Cuadrícula de productos */
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+            gap: 20px;
+        }
+
+        .tarjeta {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+
+        [contenteditable="true"]:hover { background: #f0f7ff; outline: 1px dashed var(--primario); }
+
+        .btn-comprar {
+            background: var(--primario);
+            color: white;
+            border: none;
+            padding: 10px;
+            width: 100%;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+
+        /* Estilos de la Cesta */
+        .lista-cesta {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            list-style: none;
+        }
+
+        .item-cesta {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 0;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .total-cesta {
+            font-size: 1.5rem;
+            text-align: right;
+            margin-top: 20px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+
+<nav id="menu">
+    <button onclick="mostrarSeccion('inicio')" class="active">Inicio</button>
+    <button onclick="mostrarSeccion('sudaderas')">Sudaderas/Abrigos</button>
+    <button onclick="mostrarSeccion('zapatillas')">Zapatillas</button>
+    <button onclick="mostrarSeccion('pantalones')">Pantalones</button>
+    <button onclick="mostrarSeccion('perfumes')">Perfumes</button>
+    <button onclick="mostrarSeccion('relojes')">Relojes</button>
+    <button onclick="mostrarSeccion('reventa')">Reventa</button>
+    <button onclick="mostrarSeccion('cesta')" style="border-color: #fbbf24;">🛒 Mi Cesta (<span id="count-nav">0</span>)</button>
+</nav>
+
+<div class="contenedor">
+
+    <section id="inicio" class="seccion activa">
+        <h1 contenteditable="true">Bienvenidos a mi Tienda</h1>
+        <p contenteditable="true">Selecciona una categoría arriba para empezar a comprar. Puedes editar cualquier nombre o precio haciendo clic.</p>
+    </section>
+
+    <section id="sudaderas" class="seccion">
+        <h2 contenteditable="true">Sudaderas y Abrigos</h2>
+        <div class="grid">
+            <div class="tarjeta">
+                <h3 contenteditable="true">Sudadera con Capucha</h3>
+                <p>Precio: $<span class="precio" contenteditable="true">45</span></p>
+                <button class="btn-comprar" onclick="agregar('Sudadera Capucha', 45)">Añadir</button>
+            </div>
+        </div>
+    </section>
+
+    <section id="zapatillas" class="seccion">
+        <h2 contenteditable="true">Zapatillas</h2>
+        <div class="grid">
+            <div class="tarjeta">
+                <h3 contenteditable="true">Deportivas Running</h3>
+                <p>Precio: $<span class="precio" contenteditable="true">80</span></p>
+                <button class="btn-comprar" onclick="agregar('Deportivas Running', 80)">Añadir</button>
+            </div>
+        </div>
+    </section>
+
+    <section id="pantalones" class="seccion">
+        <h2 contenteditable="true">Pantalones</h2>
+        <div class="grid">
+            <div class="tarjeta">
+                <h3 contenteditable="true">Vaqueros Slim</h3>
+                <p>Precio: $<span class="precio" contenteditable="true">35</span></p>
+                <button class="btn-comprar" onclick="agregar('Vaqueros Slim', 35)">Añadir</button>
+            </div>
+        </div>
+    </section>
+
+    <section id="perfumes" class="seccion">
+        <h2 contenteditable="true">Perfumes</h2>
+        <div class="grid">
+            <div class="tarjeta">
+                <h3 contenteditable="true">Esencia de Verano</h3>
+                <p>Precio: $<span class="precio" contenteditable="true">60</span></p>
+                <button class="btn-comprar" onclick="agregar('Esencia Verano', 60)">Añadir</button>
+            </div>
+        </div>
+    </section>
+
+    <section id="relojes" class="seccion">
+        <h2 contenteditable="true">Relojes</h2>
+        <div class="grid">
+            <div class="tarjeta">
+                <h3 contenteditable="true">Reloj de Acero</h3>
+                <p>Precio: $<span class="precio" contenteditable="true">120</span></p>
+                <button class="btn-comprar" onclick="agregar('Reloj Acero', 120)">Añadir</button>
+            </div>
+        </div>
+    </section>
+
+    <section id="reventa" class="seccion">
+        <h2 contenteditable="true">Artículos de Reventa</h2>
+        <p>Productos exclusivos de segunda mano o coleccionables.</p>
+        <div class="grid">
+            <div class="tarjeta">
+                <h3 contenteditable="true">Edición Limitada</h3>
+                <p>Precio: $<span class="precio" contenteditable="true">250</span></p>
+                <button class="btn-comprar" onclick="agregar('Edición Limitada', 250)">Añadir</button>
+            </div>
+        </div>
+    </section>
+
+    <section id="cesta" class="seccion">
+        <h2>Tu Cesta de la Compra</h2>
+        <div id="lista-cesta" class="lista-cesta">
+            <p>Tu cesta está vacía.</p>
+        </div>
+        <div class="total-cesta">Total: $<span id="total-cesta">0.00</span></div>
+        <button class="btn-comprar" style="background: #10b981; margin-top: 20px;" onclick="finalizarCompra()">Realizar Pedido</button>
+    </section>
+
+</div>
+
+<script>
+    let carrito = [];
+    let total = 0;
+
+    function mostrarSeccion(id) {
+        // Ocultar todas las secciones
+        document.querySelectorAll('.seccion').forEach(sec => sec.classList.remove('activa'));
+        // Quitar clase activa de botones
+        document.querySelectorAll('nav button').forEach(btn => btn.classList.remove('active'));
+        
+        // Mostrar la elegida
+        document.getElementById(id).classList.add('activa');
+        event.currentTarget.classList.add('active');
+    }
+
+    function agregar(nombre, precio) {
+        carrito.push({ nombre, precio });
+        actualizarCesta();
+    }
+
+    function actualizarCesta() {
+        const contenedorLista = document.getElementById('lista-cesta');
+        const countNav = document.getElementById('count-nav');
+        const totalTxt = document.getElementById('total-cesta');
+        
+        countNav.innerText = carrito.length;
+        
+        if (carrito.length === 0) {
+            contenedorLista.innerHTML = '<p>Tu cesta está vacía.</p>';
+            totalTxt.innerText = "0.00";
+            return;
+        }
+
+        contenedorLista.innerHTML = '';
+        total = 0;
+
+        carrito.forEach((prod, index) => {
+            total += prod.precio;
+            contenedorLista.innerHTML += `
+                <div class="item-cesta">
+                    <span>${prod.nombre}</span>
+                    <span>$${prod.precio.toFixed(2)} <button onclick="eliminar(${index})" style="background:red; color:white; border:none; border-radius:3px; cursor:pointer;">X</button></span>
+                </div>
+            `;
+        });
+
+        totalTxt.innerText = total.toFixed(2);
+    }
+
+    function eliminar(index) {
+        carrito.splice(index, 1);
+        actualizarCesta();
+    }
+
+    function finalizarCompra() {
+        if(carrito.length === 0) return alert("La cesta está vacía");
+        alert("¡Pedido realizado con éxito por un total de $" + total.toFixed(2) + "!");
+        carrito = [];
+        actualizarCesta();
+    }
+</script>
+
+</body>
+</html>
